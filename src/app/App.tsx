@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import './App.css'
 import {TodolistsList} from '../features/TodolistsList/TodolistsList'
 import AppBar from '@mui/material/AppBar';
@@ -12,7 +12,7 @@ import {Menu} from '@mui/icons-material';
 import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar'
 import {useAppDispatch, useAppSelector} from "./hooks";
 import {Login} from "../features/Login/Login";
-import {Navigate, Route, Routes} from "react-router-dom";
+import {HashRouter, Navigate, Route, Routes} from "react-router-dom";
 import {initializeAppTC} from "./app-reducer";
 import CircularProgress from "@mui/material/CircularProgress";
 import {logoutTC} from "../features/Login/auth-reducer";
@@ -30,17 +30,17 @@ function App({demo = false}: PropsType) {
 
     useEffect(() => {
         dispatch(initializeAppTC())
-    })
+    }, [])
 
-    if(!isInitialized) {
+    const logoutHandler = useCallback(() => {
+        dispatch(logoutTC())
+    }, [])
+
+    if (!isInitialized) {
         return <div
             style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
             <CircularProgress/>
         </div>
-    }
-
-    const logoutHandler = () => {
-        dispatch(logoutTC())
     }
 
     return (
@@ -57,10 +57,10 @@ function App({demo = false}: PropsType) {
             </AppBar>
             <Container fixed>
                 <Routes>
-                    <Route path="/" element={<TodolistsList demo={demo}/>}/>
-                    <Route path="login" element={<Login/>}/>
-                    <Route path="404" element={<h1 style={{textAlign: 'center'}}>404: PAGE NOT FOUND</h1>}/>
-                    <Route path="*" element={<Navigate to={'404'}/>}/>
+                    <Route path={"/"} element={<TodolistsList demo={demo}/>}/>
+                    <Route path={"/login"} element={<Login/>}/>
+                    <Route path={"/404"}element={<h1 style={{textAlign: 'center'}}>404: PAGE NOT FOUND</h1>}/>
+                    <Route path={"/*"} element={<Navigate to={'/404'}/>}/>
                 </Routes>
             </Container>
         </div>

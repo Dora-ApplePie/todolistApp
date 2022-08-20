@@ -28,8 +28,7 @@ export const loginTC = (data: LoginParamsType):AppThunk => (dispatch: Dispatch<A
     authAPI.login(data)
         .then(res => {
             if (res.data.resultCode === 0) {
-                const action = setIsLoggedInAC(true)
-                dispatch(action)
+                dispatch(setIsLoggedInAC(true))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
                 handleServerAppError(res.data, dispatch);
